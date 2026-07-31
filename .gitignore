@@ -26,5 +26,8 @@ deploy-platform
 *.zip
 *.tgz
 src/platform/release/
-src/platform/deploy-platform-linux-amd64.tar.gz
+
+# Keep sample product package (for 产品包管理 demo) and platform release
+!test-product.tar.gz
+!src/platform/deploy-platform-linux-amd64.tar.gz
 

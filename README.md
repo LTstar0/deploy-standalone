@@ -79,13 +79,35 @@ npm run dev # 默认启动于 3000 端口，自动代理 API 请求至 9090
 
 #### 2. 生产环境部署 (编译打包)
 
+**方式 A：使用预编译发布包（含产品包管理界面 + 示例包）**
+
+仓库已提供 Linux amd64 预编译包与示例产品包：
+
+```bash
+# 解压平台发布包
+tar -xzf src/platform/deploy-platform-linux-amd64.tar.gz -C /opt/deploy-platform
+cd /opt/deploy-platform
+./start.sh   # 默认端口 9090
+```
+
+解压后目录包含：
+- `deploy-platform`：后端二进制
+- `frontend/dist/`：前端（含**产品包管理**、部署控制台、部署历史）
+- `test-product.tar.gz`：示例产品包，可直接在「产品包管理」页上传试用
+- `start.sh`：一键启动脚本
+
+根目录的 `test-product.tar.gz` 与发布包内示例相同，也可单独下载用于包管理联调。
+
+**方式 B：从源码编译**
+
 你可以使用 Makefile 快速完成前后端的编译与整合：
 ```bash
 cd src/platform
 make build # 一键编译前端静态文件并编译 Go 后端二进制程序
 ```
-构建完成后，所有的运行物会整合至 `src/platform/release/` 下：
+构建完成后，产物在 `src/platform/dist/`，也可参考 `src/platform/deploy-platform-linux-amd64.tar.gz` 的目录结构自行打包：
 ```bash
+# 示例：本地已有 release 目录时
 cd src/platform/release
 ./start.sh # 运行部署平台服务（默认端口 9090）
 ```
@@ -134,8 +156,11 @@ deploy-standalone/
 │   ├── backend/             # Go 语言后端服务
 │   ├── frontend/            # Vue 3 + Vite 前端管理后台
 │   └── release/             # 预编译包与一键启动运行物目录
+├── test-product.tar.gz      # 示例产品包（供 Web 端「产品包管理」上传试用）
 ├── deploy.md                # 部署与配置详细手册 (本系统的技术白皮书)
-└── README.md                # 本说明文件
+├── README.md                # 本说明文件
+└── src/platform/
+    └── deploy-platform-linux-amd64.tar.gz  # 预编译平台发布包（含包管理前端 + 示例包）
 ```
 
 ---
