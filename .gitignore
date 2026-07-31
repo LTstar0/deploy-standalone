@@ -1,0 +1,30 @@
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Logs
+logs/
+*.log
+
+# Node dependencies & build artifacts
+node_modules/
+dist/
+src/platform/frontend/dist/
+
+# Go binary / workspaces / packages
+src/platform/backend/data/
+src/platform/backend/deploy-platform
+deploy-platform
+
+# Compressed packages / release packages
+*.tar.gz
+*.zip
+*.tgz
+src/platform/release/
+src/platform/deploy-platform-linux-amd64.tar.gz
+

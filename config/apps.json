@@ -1,0 +1,95 @@
+{
+  "project": {
+    "name": "我的生产项目",
+    "version": "1.2.0",
+    "environment": "production"
+  },
+  "deploy_config": {
+    "parallel_execution": false,
+    "stop_on_failure": true,
+    "backup_before_deploy": false,
+    "notification": {
+      "enabled": false,
+      "slack_webhook": "",
+      "email": ""
+    }
+  },
+  "apps": {
+    "database": {
+      "name": "MySQL 数据库",
+      "description": "主业务数据库，其他服务的基础依赖",
+      "enabled": true,
+      "dependencies": [],
+      "deploy_order": 1,
+      "health_check": {
+        "command": "mysqladmin ping -h 127.0.0.1 --silent",
+        "timeout": 30
+      },
+      "rollback_support": true,
+      "scripts": {
+        "pre_deploy": "",
+        "deploy": "apps/database/deploy.sh",
+        "post_deploy": "",
+        "health_check": "",
+        "rollback": ""
+      }
+    },
+    "redis": {
+      "name": "Redis 缓存",
+      "description": "缓存和会话存储服务",
+      "enabled": true,
+      "dependencies": [],
+      "deploy_order": 2,
+      "health_check": {
+        "command": "redis-cli ping",
+        "timeout": 15
+      },
+      "rollback_support": true,
+      "scripts": {
+        "pre_deploy": "",
+        "deploy": "apps/redis/deploy.sh",
+        "post_deploy": "",
+        "health_check": "",
+        "rollback": ""
+      }
+    },
+    "api-backend": {
+      "name": "API 后端服务",
+      "description": "提供业务接口，依赖数据库和 Redis",
+      "enabled": true,
+      "dependencies": ["database", "redis"],
+      "deploy_order": 3,
+      "health_check": {
+        "url": "http://localhost:8080/actuator/health",
+        "timeout": 60
+      },
+      "rollback_support": true,
+      "scripts": {
+        "pre_deploy": "",
+        "deploy": "apps/api-backend/deploy.sh",
+        "post_deploy": "",
+        "health_check": "apps/api-backend/health-check.sh",
+        "rollback": "apps/api-backend/rollback.sh"
+      }
+    },
+    "web-frontend": {
+      "name": "Web 前端",
+      "description": "用户界面，依赖后端 API 服务",
+      "enabled": true,
+      "dependencies": ["api-backend"],
+      "deploy_order": 4,
+      "health_check": {
+        "url": "http://localhost:80",
+        "timeout": 30
+      },
+      "rollback_support": true,
+      "scripts": {
+        "pre_deploy": "",
+        "deploy": "apps/web-frontend/deploy.sh",
+        "post_deploy": "",
+        "health_check": "apps/web-frontend/health-check.sh",
+        "rollback": "apps/web-frontend/rollback.sh"
+      }
+    }
+  }
+}
